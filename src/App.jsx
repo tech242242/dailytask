@@ -13,12 +13,17 @@ export default function App() {
     <div className="min-h-screen bg-[var(--ios-bg)] text-gray-900 font-inter">
       <div className="container mx-auto max-w-2xl px-5 py-8">
         <Header />
-        <CurrentReminder />
-        <SyllabusProgress />
-        <ScheduleList />
-        <SubjectProgress />
-        <PerformanceSummary />
+
+        {/* add beautiful vertical spacing between all cards */}
+        <div className="space-y-8">
+          <CurrentReminder />
+          <SyllabusProgress />
+          <ScheduleList />
+          <SubjectProgress />
+          <PerformanceSummary />
+        </div>
       </div>
+
       <FloatingActionButton />
     </div>
   );
