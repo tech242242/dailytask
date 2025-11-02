@@ -51,20 +51,20 @@ export default function DashboardOverview() {
       {/* ====== COMPONENT-SPECIFIC STYLES ====== */}
       <style>{`
         .dashboard-card {
-          background: rgba(255, 255, 255, 0.15);
+          background: rgba(255, 255, 255, 0.85);
           border-radius: 20px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(0, 0, 0, 0.1);
           backdrop-filter: blur(20px);
           padding: 1.5rem;
-          box-shadow: 0 8px 25px rgba(0, 122, 255, 0.25);
-          color: #fff;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          color: #000;
           margin-bottom: 1.5rem;
           transition: all 0.3s ease;
         }
         .dashboard-card:hover {
-          background: rgba(255, 255, 255, 0.25);
+          background: rgba(255, 255, 255, 0.95);
           transform: translateY(-3px);
-          box-shadow: 0 10px 30px rgba(0, 122, 255, 0.4);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
         }
         .dashboard-header {
           text-align: center;
@@ -73,13 +73,11 @@ export default function DashboardOverview() {
         .dashboard-header h2 {
           font-size: 1.4rem;
           font-weight: 700;
-          background: linear-gradient(90deg, #00c6ff, #0072ff);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          color: #0072ff;
         }
         .dashboard-header p {
           font-size: 0.9rem;
-          color: rgba(255,255,255,0.85);
+          color: rgba(0, 0, 0, 0.7);
         }
         .dashboard-content {
           display: flex;
@@ -93,16 +91,16 @@ export default function DashboardOverview() {
           font-size: 0.95rem;
         }
         .label {
-          color: rgba(255,255,255,0.75);
+          color: rgba(0, 0, 0, 0.7);
           font-weight: 500;
         }
         .value {
           font-weight: 600;
-          color: #fff;
+          color: #000;
         }
         .glow-text {
-          color: #5ac8fa;
-          text-shadow: 0 0 8px rgba(0,198,255,0.6);
+          color: #0072ff;
+          text-shadow: 0 0 6px rgba(0, 114, 255, 0.3);
         }
         .progress-container {
           display: flex;
@@ -113,7 +111,7 @@ export default function DashboardOverview() {
         .progress-track {
           flex: 1;
           height: 8px;
-          background: rgba(255,255,255,0.2);
+          background: rgba(0, 0, 0, 0.1);
           border-radius: 10px;
           overflow: hidden;
         }
@@ -126,6 +124,7 @@ export default function DashboardOverview() {
         .progress-text {
           font-size: 0.85rem;
           font-weight: 600;
+          color: #000;
         }
         .fade-in {
           animation: fadeIn 0.6s ease forwards;
