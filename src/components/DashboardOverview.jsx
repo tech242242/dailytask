@@ -1,12 +1,59 @@
 import React, { useEffect, useState } from "react";
+import schedule from "../data/schedule";
 
 export default function DashboardOverview() {
   const [time, setTime] = useState(new Date());
-  const [nextTask, setNextTask] = useState("Math Revision");
-  const [progress, setProgress] = useState(68);
+  const [currentTask, setCurrentTask] = useState({});
+  const [progress, setProgress] = useState(0);
+  const [nextTaskTime, setNextTaskTime] = useState("");
+
+  // Helper: parse "5:00 AM – 6:30 AM" into Date objects
+  const parseTimeRange = (range) => {
+    const [startStr, endStr] = range.split("–").map((s) => s.trim());
+    const today = new Date();
+    
+    const parse = (str) => {
+      let [time, modifier] = str.split(" ");
+      let [hours, minutes] = time.split(":").map(Number);
+      if (modifier === "PM" && hours !== 12) hours += 12;
+      if (modifier === "AM" && hours === 12) hours = 0;
+      return new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes);
+    };
+    
+    return [parse(startStr), parse(endStr)];
+  };
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
+    const timer = setInterval(() => {
+      const now = new Date();
+      setTime(now);
+
+      let foundTask = null;
+      let nextTaskCountdown = "";
+
+      for (let i = 0; i < schedule.length; i++) {
+        const [start, end] = parseTimeRange(schedule[i].time);
+        if (now >= start && now <= end) {
+          foundTask = schedule[i];
+          const totalDuration = end - start;
+          const elapsed = now - start;
+          setProgress(Math.floor((elapsed / totalDuration) * 100));
+          break;
+        } else if (now < start) {
+          foundTask = schedule[i - 1] || schedule[0];
+          const diff = start - now;
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          nextTaskCountdown = `${hours} hr ${minutes} min`;
+          setProgress(foundTask ? 0 : 0);
+          break;
+        }
+      }
+
+      setCurrentTask(foundTask || schedule[schedule.length - 1]);
+      setNextTaskTime(nextTaskCountdown);
+    }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -26,7 +73,7 @@ export default function DashboardOverview() {
       <div className="dashboard-content">
         <div className="dashboard-item">
           <span className="label">Active Task</span>
-          <span className="value">{nextTask}</span>
+          <span className="value">{currentTask.area} {currentTask.icon}</span>
         </div>
 
         <div className="dashboard-item">
@@ -44,11 +91,10 @@ export default function DashboardOverview() {
 
         <div className="dashboard-item">
           <span className="label">Next Task Starts In</span>
-          <span className="value glow-text">1 hr 25 min</span>
+          <span className="value glow-text">{nextTaskTime || "Now"}</span>
         </div>
       </div>
 
-      {/* ====== COMPONENT-SPECIFIC STYLES ====== */}
       <style>{`
         .dashboard-card {
           background: rgba(255, 255, 255, 0.85);
