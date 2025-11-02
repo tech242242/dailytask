@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./components/Header";
 import DashboardOverview from "./components/DashboardOverview";
+import InstallAppButton from "./components/InstallAppButton";
 import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
 import CurrentReminder from "./components/CurrentReminder";
 import SyllabusProgress from "./components/SyllabusProgress";
@@ -37,6 +38,7 @@ export default function App() {
 
       <FloatingActionButton />
       <ServiceWorkerRegistration />
+      <InstallAppButton />
       {/* Smooth theme transition */}
       <style>{`
         :root {
