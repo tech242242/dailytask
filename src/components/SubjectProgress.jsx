@@ -19,6 +19,7 @@ const categories = [
 
 export default function SubjectProgress() {
   const [progress, setProgress] = useState({});
+  const [expanded, setExpanded] = useState({}); // for showing tick boxes
 
   // Load saved progress
   useEffect(() => {
@@ -69,6 +70,14 @@ export default function SubjectProgress() {
     }
   };
 
+  const toggleExpand = (subject, category) => {
+    const key = `${subject}-${category}`;
+    setExpanded((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
   return (
     <div className="ios-card p-6 mt-10 fade-in">
       <div className="flex justify-between items-center mb-5">
@@ -99,9 +108,11 @@ export default function SubjectProgress() {
             {categories.map((cat, cIdx) => {
               const completed = progress[subject.name]?.[cat.name]?.length || 0;
               const percent = Math.round((completed / cat.total) * 100);
+              const key = `${subject.name}-${cat.name}`;
+              const isExpanded = expanded[key];
 
               return (
-                <div key={cIdx} className="mb-4">
+                <div key={cIdx} className="mb-6 transition-all duration-300">
                   <div className="flex justify-between mb-1">
                     <span className="text-sm font-medium text-gray-700">
                       {cat.name}
@@ -119,32 +130,43 @@ export default function SubjectProgress() {
                     ></div>
                   </div>
 
-                  <div className="tick-grid mt-2">
-                    {[...Array(cat.total)].map((_, i) => {
-                      const day = i + 1;
-                      const isChecked =
-                        progress[subject.name]?.[cat.name]?.includes(day);
-                      return (
-                        <button
-                          key={i}
-                          onClick={() =>
-                            toggleTick(subject.name, cat.name, day)
-                          }
-                          className={`tick ${
-                            isChecked ? "tick-active" : "tick-inactive"
-                          }`}
-                          style={{
-                            borderColor: subject.color,
-                            backgroundColor: isChecked
-                              ? subject.color
-                              : "transparent",
-                          }}
-                        >
-                          {isChecked ? "✓" : day}
-                        </button>
-                      );
-                    })}
+                  <div className="flex justify-end mt-2">
+                    <button
+                      onClick={() => toggleExpand(subject.name, cat.name)}
+                      className="toggle-btn bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1.5 rounded-full shadow-sm"
+                    >
+                      {isExpanded ? "Hide Progress" : "Add Progress"}
+                    </button>
                   </div>
+
+                  {isExpanded && (
+                    <div className="tick-grid mt-3 fade-in">
+                      {[...Array(cat.total)].map((_, i) => {
+                        const day = i + 1;
+                        const isChecked =
+                          progress[subject.name]?.[cat.name]?.includes(day);
+                        return (
+                          <button
+                            key={i}
+                            onClick={() =>
+                              toggleTick(subject.name, cat.name, day)
+                            }
+                            className={`tick ${
+                              isChecked ? "tick-active" : "tick-inactive"
+                            }`}
+                            style={{
+                              borderColor: subject.color,
+                              backgroundColor: isChecked
+                                ? subject.color
+                                : "transparent",
+                            }}
+                          >
+                            {isChecked ? "✓" : day}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               );
             })}
