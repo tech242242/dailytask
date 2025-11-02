@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./components/Header";
+import DashboardOverview from "./components/DashboardOverview";
 import CurrentReminder from "./components/CurrentReminder";
 import SyllabusProgress from "./components/SyllabusProgress";
 import ScheduleList from "./components/ScheduleList";
@@ -17,6 +18,7 @@ export default function App() {
         {/* add beautiful vertical spacing between all cards */}
         <div className="space-y-8">
           <CurrentReminder />
+          <DashboardOverview />
           <SyllabusProgress />
           <ScheduleList />
           <SubjectProgress />
