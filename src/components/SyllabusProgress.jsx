@@ -19,49 +19,223 @@ export default function SyllabusProgress() {
   const offset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="ios-card p-6 mb-8 text-center fade-in">
-      <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center justify-center">
-        <i data-lucide="calendar-check" className="w-6 h-6 mr-3 text-indigo-600"></i>
+    <div className="syllabus-card fade-in">
+      <h2 className="title">
+        <i data-lucide="calendar-check" className="icon"></i>
         4-Month Syllabus Progress
       </h2>
 
-      <div className="flex items-center justify-center mb-4">
-        <div className="circular-progress mr-6 relative">
+      <div className="content">
+        {/* Circular Progress */}
+        <div className="progress-wrapper">
           <svg width="120" height="120" viewBox="0 0 120 120">
-            <circle className="circular-bg" cx="60" cy="60" r="52"></circle>
+            <circle className="progress-bg" cx="60" cy="60" r="52"></circle>
             <circle
-              className="circular-fill"
+              className="progress-fill"
               cx="60"
               cy="60"
               r="52"
-              stroke="#007aff"
               strokeDasharray="326.7"
               strokeDashoffset={offset}
             ></circle>
           </svg>
-          <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
-            <span className="text-2xl font-bold text-gray-800">
-              {Math.round(progress)}%
-            </span>
-            <span className="text-xs text-gray-500 mt-1">
+
+          <div className="progress-text">
+            <span className="percent">{Math.round(progress)}%</span>
+            <span className="days">
               {daysLeft > 0 ? `${daysLeft} days left` : "Completed!"}
             </span>
           </div>
         </div>
 
-        <div className="text-left">
-          <p className="text-sm text-gray-600 mb-2">You're making great progress!</p>
-          <div className="space-y-1 text-sm">
-            <p>Math: 40%</p>
-            <p>Physics: 60%</p>
-            <p>Computer: 30%</p>
+        {/* Text Info */}
+        <div className="details">
+          <p className="subtitle">You're making great progress!</p>
+          <div className="bars">
+            <div className="bar-item">
+              <span>Math</span>
+              <div className="bar">
+                <div className="fill blue" style={{ width: "40%" }}></div>
+              </div>
+              <span className="percent-text">40%</span>
+            </div>
+            <div className="bar-item">
+              <span>Physics</span>
+              <div className="bar">
+                <div className="fill green" style={{ width: "60%" }}></div>
+              </div>
+              <span className="percent-text">60%</span>
+            </div>
+            <div className="bar-item">
+              <span>Computer</span>
+              <div className="bar">
+                <div className="fill purple" style={{ width: "30%" }}></div>
+              </div>
+              <span className="percent-text">30%</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <p className="text-sm text-gray-600 mt-3 font-medium">
-        Keep going! You're doing amazing.
-      </p>
+      <p className="footer-text">Keep going — you're doing amazing! 💪</p>
+
+      {/* Component-specific CSS */}
+      <style>{`
+        .syllabus-card {
+          background: white;
+          border-radius: 18px;
+          padding: 1.5rem;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+          border: 1px solid rgba(0,0,0,0.05);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          text-align: center;
+        }
+        .syllabus-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 15px 35px rgba(0,122,255,0.15);
+        }
+
+        .title {
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: #1e293b;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1rem;
+        }
+        .icon {
+          width: 1.5rem;
+          height: 1.5rem;
+          margin-right: 0.5rem;
+          color: #007aff;
+        }
+
+        .content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1.2rem;
+          flex-wrap: wrap;
+        }
+
+        /* Circular progress */
+        .progress-wrapper {
+          position: relative;
+          width: 120px;
+          height: 120px;
+        }
+        svg {
+          transform: rotate(-90deg);
+        }
+        .progress-bg {
+          fill: none;
+          stroke: #e5e7eb;
+          stroke-width: 8;
+        }
+        .progress-fill {
+          fill: none;
+          stroke-width: 8;
+          stroke-linecap: round;
+          stroke: url(#gradient);
+          stroke: linear-gradient(90deg, #007aff, #5ac8fa);
+          stroke: #007aff;
+          transition: stroke-dashoffset 0.6s ease;
+          animation: pulseGlow 2s infinite alternate;
+        }
+        @keyframes pulseGlow {
+          from { filter: drop-shadow(0 0 4px rgba(0,122,255,0.4)); }
+          to { filter: drop-shadow(0 0 10px rgba(0,122,255,0.8)); }
+        }
+
+        .progress-text {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+        }
+        .percent {
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: #007aff;
+        }
+        .days {
+          font-size: 0.8rem;
+          color: #64748b;
+          margin-top: 0.2rem;
+        }
+
+        /* Subject bars */
+        .details {
+          flex: 1;
+          text-align: left;
+          min-width: 180px;
+        }
+        .subtitle {
+          color: #64748b;
+          font-size: 0.9rem;
+          margin-bottom: 0.5rem;
+        }
+        .bars {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .bar-item {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        .bar-item span:first-child {
+          width: 70px;
+          font-size: 0.85rem;
+          color: #1e293b;
+          font-weight: 500;
+        }
+        .bar {
+          flex: 1;
+          height: 8px;
+          background: #e2e8f0;
+          border-radius: 6px;
+          overflow: hidden;
+          position: relative;
+        }
+        .fill {
+          height: 100%;
+          border-radius: 6px;
+          transition: width 0.5s ease;
+        }
+        .fill.blue { background: linear-gradient(90deg,#007aff,#5ac8fa); }
+        .fill.green { background: linear-gradient(90deg,#34c759,#5ac8fa); }
+        .fill.purple { background: linear-gradient(90deg,#7c3aed,#a78bfa); }
+        .percent-text {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: #334155;
+          width: 35px;
+          text-align: right;
+        }
+
+        .footer-text {
+          margin-top: 1rem;
+          font-size: 0.9rem;
+          color: #64748b;
+          font-weight: 500;
+        }
+
+        .fade-in {
+          animation: fadeIn 0.6s ease forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(15px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 }
