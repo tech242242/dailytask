@@ -7,7 +7,12 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "favicon.ico", "robots.txt", "apple-touch-icon.png"],
+      includeAssets: [
+        "favicon.svg",
+        "favicon.ico",
+        "robots.txt",
+        "apple-touch-icon.png"
+      ],
       manifest: {
         name: "Daily Schedule Tracker",
         short_name: "StudyTracker",
@@ -21,15 +26,20 @@ export default defineConfig({
           {
             src: "/pwa-192x192.png",
             sizes: "192x192",
-            type: "image/png",
+            type: "image/png"
           },
           {
             src: "/pwa-512x512.png",
             sizes: "512x512",
-            type: "image/png",
+            type: "image/png"
           },
-        ],
-      },
-    }),
-  ],
+          {
+            src: "/apple-touch-icon.png",
+            sizes: "180x180",
+            type: "image/png"
+          }
+        ]
+      }
+    })
+  ]
 });
