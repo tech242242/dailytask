@@ -22,41 +22,50 @@ export default function UpdatePrompt() {
     }
   }, []);
 
+  // Auto-hide after 8 seconds
+  useEffect(() => {
+    let timer;
+    if (showReload) {
+      timer = setTimeout(() => setShowReload(false), 8000);
+    }
+    return () => clearTimeout(timer);
+  }, [showReload]);
+
   const reloadApp = () => {
     waitingWorker?.postMessage({ type: "SKIP_WAITING" });
     setShowReload(false);
     window.location.reload();
   };
 
-  const hidePrompt = () => {
-    setShowReload(false);
-  };
+  const hidePrompt = () => setShowReload(false);
 
   if (!showReload) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-gray-900/80 text-white px-5 py-3 rounded-2xl border border-white/20 backdrop-blur-md shadow-lg animate-slideUp">
-      <span>✨ New version available!</span>
+    <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-white/10 text-white px-5 py-3 rounded-2xl border border-white/20 backdrop-blur-xl shadow-lg animate-fadeInOut">
+      <span className="text-sm md:text-base">✨ New version available!</span>
+
       <button
         onClick={reloadApp}
-        className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-3 py-1 rounded-lg transition-all"
+        className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-3 py-1 rounded-lg transition-all text-sm"
       >
         Update
       </button>
       <button
         onClick={hidePrompt}
-        className="bg-gray-700 hover:bg-gray-600 text-gray-200 font-semibold px-3 py-1 rounded-lg transition-all"
+        className="bg-gray-700/80 hover:bg-gray-600 text-gray-200 font-medium px-3 py-1 rounded-lg transition-all text-sm"
       >
         Hide
       </button>
 
       <style>{`
-        @keyframes slideUp {
-          from { transform: translate(-50%, 150%); opacity: 0; }
-          to { transform: translate(-50%, 0); opacity: 1; }
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translate(-50%, 50%); }
+          10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+          100% { opacity: 0; transform: translate(-50%, 50%); }
         }
-        .animate-slideUp {
-          animation: slideUp 0.4s ease-out;
+        .animate-fadeInOut {
+          animation: fadeInOut 8s ease-in-out forwards;
         }
       `}</style>
     </div>
