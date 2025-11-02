@@ -2,71 +2,245 @@ import React, { useEffect, useState } from "react";
 
 export default function CurrentReminder() {
   const [time, setTime] = useState(new Date());
+  const [currentTask, setCurrentTask] = useState(null);
   const [progress, setProgress] = useState(0);
 
-  // Define your time periods (timeline hours)
+  // Schedule data
   const schedule = [
-    { label: "5 AM", minutes: 300 },
-    { label: "8 AM", minutes: 480 },
-    { label: "11 AM", minutes: 660 },
-    { label: "2 PM", minutes: 840 },
-    { label: "5 PM", minutes: 1020 },
-    { label: "8 PM", minutes: 1200 },
-    { label: "11 PM", minutes: 1380 },
-    { label: "2 AM", minutes: 120 },
+    { time: "5:00 AM – 6:30 AM", activity: "Math Practice" },
+    { time: "6:30 AM – 8:00 AM", activity: "Free / Morning Routine" },
+    { time: "8:00 AM – 2:00 PM", activity: "College / Study Time" },
+    { time: "2:00 PM – 4:00 PM", activity: "Physics Practice" },
+    { time: "4:00 PM – 6:00 PM", activity: "Computer Learning" },
+    { time: "6:00 PM – 8:00 PM", activity: "Family / Relax Time" },
+    { time: "8:00 PM – 9:00 PM", activity: "English Writing" },
+    { time: "9:00 PM – 10:30 PM", activity: "Revision / Reading" },
+    { time: "10:30 PM – 5:00 AM", activity: "Sleep / Rest" },
   ];
 
-  // Update time every second
+  // Convert time string → minutes
+  function timeToMinutes(t) {
+    const [raw, period] = t.trim().split(" ");
+    const [h, m] = raw.split(":").map(Number);
+    let hours = h % 12;
+    if (period.toLowerCase().includes("pm")) hours += 12;
+    return hours * 60 + (m || 0);
+  }
+
+  // Process schedule into minute ranges
+  const processed = schedule.map((item) => {
+    const [start, end] = item.time.split("–").map((t) => t.trim());
+    return {
+      ...item,
+      startMin: timeToMinutes(start),
+      endMin: timeToMinutes(end),
+    };
+  });
+
+  // Update current time + task
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
+    const timer = setInterval(() => {
+      const now = new Date();
+      setTime(now);
+
+      const minutes = now.getHours() * 60 + now.getMinutes();
+      let found = null;
+      for (const s of processed) {
+        if (
+          (s.startMin <= s.endMin &&
+            minutes >= s.startMin &&
+            minutes < s.endMin) ||
+          (s.startMin > s.endMin &&
+            (minutes >= s.startMin || minutes < s.endMin))
+        ) {
+          found = s;
+          const duration =
+            s.startMin > s.endMin
+              ? 1440 - s.startMin + s.endMin
+              : s.endMin - s.startMin;
+          const elapsed =
+            s.startMin > s.endMin
+              ? minutes >= s.startMin
+                ? minutes - s.startMin
+                : 1440 - s.startMin + minutes
+              : minutes - s.startMin;
+          setProgress(Math.min(100, (elapsed / duration) * 100));
+          break;
+        }
+      }
+      setCurrentTask(found);
+    }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
-  // Calculate progress of the day
-  const minutes = time.getHours() * 60 + time.getMinutes();
-  const dayProgress = (minutes / 1440) * 100;
-
   return (
-    <div className="current-reminder p-6 mb-10 bounce-in text-white relative overflow-hidden">
-      {/* Top Info */}
-      <div className="flex justify-between items-start mb-4">
+    <div className="reminder-card bounce-in">
+      <div className="reminder-header">
         <div>
-          <p className="text-sm opacity-90">{time.toLocaleTimeString()}</p>
-          <h2 className="text-2xl font-bold mb-1">Current Activity</h2>
-          <p className="text-sm opacity-90">Stay focused and keep moving!</p>
+          <p className="time-text">{time.toLocaleTimeString()}</p>
+          <h2 className="title">Current Activity</h2>
+          <p className="activity-name">
+            {currentTask ? currentTask.activity : "No task right now"}
+          </p>
         </div>
-        <div className="flex items-center">
-          <div className="status-indicator active-indicator"></div>
-          <span className="text-xs font-medium ml-1">LIVE</span>
+        <div className="live-status">
+          <div className="status-dot"></div>
+          <span>LIVE</span>
         </div>
       </div>
 
       {/* Timeline Graph */}
-      <div className="timeline-container mt-4 mb-6">
-        <div className="timeline-bar"></div>
+      <div className="timeline">
+        <div className="timeline-track"></div>
         <div
-          className="timeline-current"
-          style={{ left: `${dayProgress}%` }}
+          className="timeline-progress"
+          style={{ width: `${progress}%` }}
         ></div>
-        {schedule.map((mark, i) => (
-          <span
-            key={i}
-            className="timeline-label"
-            style={{ left: `${(mark.minutes / 1440) * 100}%` }}
-          >
-            {mark.label}
-          </span>
-        ))}
       </div>
 
-      {/* Notification Controls */}
-      <div className="mt-5 flex justify-between items-center">
-        <button className="notification-button flex items-center">
+      {/* Time Remaining */}
+      {currentTask && (
+        <p className="time-left">
+          Time Remaining:{" "}
+          {(() => {
+            const nowMin = time.getHours() * 60 + time.getMinutes();
+            const end = currentTask.endMin;
+            const remaining =
+              end > nowMin ? end - nowMin : 1440 - nowMin + end;
+            const hrs = Math.floor(remaining / 60);
+            const mins = remaining % 60;
+            return `${hrs > 0 ? hrs + "h " : ""}${mins}m`;
+          })()}
+        </p>
+      )}
+
+      {/* Notification Button */}
+      <div className="notif-row">
+        <button className="notif-btn">
           <i data-lucide="bell" className="w-5 h-5 mr-2"></i>
-          <span>Allow Notifications</span>
+          Allow Notifications
         </button>
-        <p className="text-xs opacity-90">Notifications On</p>
+        <p className="notif-status">Notifications On</p>
       </div>
+
+      {/* Component-specific CSS */}
+      <style>{`
+        .reminder-card {
+          background: linear-gradient(135deg, #007aff, #5ac8fa);
+          color: #fff;
+          border-radius: 22px;
+          padding: 1.5rem;
+          box-shadow: 0 12px 35px rgba(0,122,255,0.3);
+          overflow: hidden;
+          position: relative;
+        }
+        .reminder-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 1rem;
+        }
+        .time-text {
+          opacity: 0.9;
+          font-size: 0.9rem;
+        }
+        .title {
+          font-size: 1.4rem;
+          font-weight: 700;
+          margin: 0.2rem 0;
+        }
+        .activity-name {
+          font-weight: 500;
+          opacity: 0.95;
+        }
+        .live-status {
+          display: flex;
+          align-items: center;
+          font-size: 0.8rem;
+          font-weight: 600;
+        }
+        .status-dot {
+          width: 10px;
+          height: 10px;
+          background: #34c759;
+          border-radius: 50%;
+          margin-right: 6px;
+          box-shadow: 0 0 0 6px rgba(52,199,89,0.25);
+          animation: pulse 2s infinite;
+        }
+
+        /* Timeline */
+        .timeline {
+          width: 100%;
+          height: 10px;
+          border-radius: 10px;
+          background: rgba(255,255,255,0.3);
+          overflow: hidden;
+          position: relative;
+          margin: 1rem 0;
+        }
+        .timeline-track {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: rgba(255,255,255,0.15);
+        }
+        .timeline-progress {
+          height: 100%;
+          background: linear-gradient(90deg, #34c759, #5ac8fa, #007aff);
+          box-shadow: 0 0 10px rgba(52,199,89,0.5);
+          transition: width 0.5s linear;
+        }
+        .time-left {
+          font-size: 0.9rem;
+          font-weight: 600;
+          opacity: 0.9;
+          margin-bottom: 1rem;
+        }
+
+        /* Notifications */
+        .notif-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .notif-btn {
+          background: white;
+          color: #007aff;
+          border-radius: 12px;
+          padding: 10px 20px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          box-shadow: 0 4px 15px rgba(0,122,255,0.25);
+          transition: all 0.3s ease;
+        }
+        .notif-btn:active {
+          transform: scale(0.96);
+        }
+        .notif-status {
+          font-size: 0.8rem;
+          opacity: 0.9;
+        }
+
+        /* Animation */
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(52,199,89,0.4); }
+          70% { box-shadow: 0 0 0 12px rgba(52,199,89,0); }
+          100% { box-shadow: 0 0 0 0 rgba(52,199,89,0); }
+        }
+
+        .bounce-in {
+          animation: bounceIn 0.6s ease forwards;
+        }
+
+        @keyframes bounceIn {
+          0% { transform: scale(0.3); opacity: 0; }
+          50% { transform: scale(1.05); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
