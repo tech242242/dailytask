@@ -6,12 +6,19 @@ export default function ServiceWorkerRegistration() {
 
   useEffect(() => {
     console.log("✅ PWA Service Worker Registered");
+
+    // Reload page when new service worker activates
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        window.location.reload();
+      });
+    }
   }, []);
 
   return (
     <>
       {needRefresh && (
-        <div className="fixed bottom-4 right-4 bg-cyan-600 text-white px-4 py-2 rounded-xl shadow-lg">
+        <div className="fixed bottom-4 right-4 bg-cyan-600 text-white px-4 py-2 rounded-xl shadow-lg flex items-center gap-2">
           <p>New version available!</p>
           <button
             onClick={() => updateServiceWorker(true)}
