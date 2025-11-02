@@ -2,18 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Flame, Target } from "lucide-react";
 
 export default function DailyGoalTracker() {
-  const [goal, setGoal] = useState(() => {
-    return parseInt(localStorage.getItem("dailyGoal")) || 3;
-  });
-  const [completed, setCompleted] = useState(() => {
-    return parseInt(localStorage.getItem("tasksDoneToday")) || 0;
-  });
-  const [streak, setStreak] = useState(() => {
-    return parseInt(localStorage.getItem("streakDays")) || 0;
-  });
-  const [lastDate, setLastDate] = useState(() => {
-    return localStorage.getItem("lastCompletionDate") || "";
-  });
+  const [goal, setGoal] = useState(() => parseInt(localStorage.getItem("dailyGoal")) || 3);
+  const [completed, setCompleted] = useState(() => parseInt(localStorage.getItem("tasksDoneToday")) || 0);
+  const [streak, setStreak] = useState(() => parseInt(localStorage.getItem("streakDays")) || 0);
+  const [lastDate, setLastDate] = useState(() => localStorage.getItem("lastCompletionDate") || "");
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  // Listen to theme changes (if toggled in Header)
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const current = localStorage.getItem("theme") || "light";
+      setTheme(current);
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    return () => observer.disconnect();
+  }, []);
 
   // Reset or update streak each day
   useEffect(() => {
@@ -22,7 +25,6 @@ export default function DailyGoalTracker() {
       setStreak((prev) => prev + 1);
       setCompleted(0);
     } else if (lastDate && lastDate !== today) {
-      // missed the day
       setStreak(0);
       setCompleted(0);
     }
@@ -44,16 +46,26 @@ export default function DailyGoalTracker() {
     }
   };
 
+  // Theme-based styles
+  const isDark = theme === "dark";
+  const textColor = isDark ? "text-gray-100" : "text-gray-900";
+  const subText = isDark ? "text-gray-400" : "text-gray-600";
+  const bgCard = isDark
+    ? "bg-white/10 border-white/20"
+    : "bg-white/60 border-gray-200";
+
   return (
-    <div className="p-5 rounded-2xl border border-white/20 backdrop-blur-lg bg-white/10 shadow-lg glass-move text-white relative overflow-hidden">
+    <div
+      className={`p-5 rounded-2xl border backdrop-blur-lg shadow-lg glass-move relative overflow-hidden ${bgCard} ${textColor}`}
+    >
       <h2 className="text-lg font-semibold flex items-center gap-2 mb-2">
         <Target className="text-cyan-400" /> Daily Goal Tracker
       </h2>
 
       <div className="flex justify-between items-center mb-3">
         <div>
-          <p className="text-sm opacity-80">Goal: {goal} tasks</p>
-          <p className="text-sm opacity-80">Completed: {completed}</p>
+          <p className={`text-sm ${subText}`}>Goal: {goal} tasks</p>
+          <p className={`text-sm ${subText}`}>Completed: {completed}</p>
         </div>
         <button
           onClick={addProgress}
@@ -74,7 +86,11 @@ export default function DailyGoalTracker() {
           max="20"
           value={goal}
           onChange={(e) => setGoal(parseInt(e.target.value) || 1)}
-          className="bg-white/10 border border-white/20 rounded-md px-2 py-1 w-16 text-center text-white text-sm focus:outline-none"
+          className={`border rounded-md px-2 py-1 w-16 text-center text-sm focus:outline-none transition-all ${
+            isDark
+              ? "bg-white/10 border-white/20 text-white"
+              : "bg-white border-gray-300 text-gray-800"
+          }`}
         />
       </div>
 
