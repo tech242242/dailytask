@@ -1,22 +1,58 @@
 import React, { useEffect, useState } from "react";
 
 export default function SyllabusProgress() {
-  const [progress, setProgress] = useState(0);
+  const [overallProgress, setOverallProgress] = useState(0);
   const [daysLeft, setDaysLeft] = useState(0);
+  const [subjectProgress, setSubjectProgress] = useState({});
 
   useEffect(() => {
+    // --- Calculate overall 4-month timeline ---
     const start = new Date(2025, 10, 2);
     const end = new Date(2026, 2, 2);
     const total = end - start;
     const now = new Date() - start;
     const percent = Math.min(100, (now / total) * 100);
     const days = Math.ceil((end - new Date()) / (1000 * 60 * 60 * 24));
-    setProgress(percent);
+    setOverallProgress(percent);
     setDaysLeft(days);
+
+    // --- Load subject progress from localStorage ---
+    const saved = localStorage.getItem("subjectProgress");
+    if (saved) {
+      const data = JSON.parse(saved);
+      const result = {};
+
+      Object.keys(data).forEach((subject) => {
+        const subj = data[subject];
+        let totalTicks = 0;
+        let totalPossible = 0;
+
+        Object.keys(subj).forEach((category) => {
+          totalTicks += subj[category].length;
+          if (category === "MCQs") totalPossible += 20;
+          if (category === "Short Questions") totalPossible += 40;
+          if (category === "Long Questions") totalPossible += 60;
+        });
+
+        result[subject] = Math.round((totalTicks / totalPossible) * 100);
+      });
+
+      setSubjectProgress(result);
+    }
   }, []);
 
   const circumference = 326.7;
-  const offset = circumference - (progress / 100) * circumference;
+  const offset = circumference - (overallProgress / 100) * circumference;
+
+  const subjects = [
+    { name: "Math", color: "blue" },
+    { name: "Physics", color: "green" },
+    { name: "English", color: "yellow" },
+    { name: "Computer", color: "red" },
+    { name: "Urdu", color: "indigo" },
+    { name: "Pak Studies", color: "orange" },
+    { name: "Holy Quran", color: "cyan" },
+  ];
 
   return (
     <div className="syllabus-card fade-in">
@@ -41,45 +77,42 @@ export default function SyllabusProgress() {
           </svg>
 
           <div className="progress-text">
-            <span className="percent">{Math.round(progress)}%</span>
+            <span className="percent">{Math.round(overallProgress)}%</span>
             <span className="days">
               {daysLeft > 0 ? `${daysLeft} days left` : "Completed!"}
             </span>
           </div>
         </div>
 
-        {/* Text Info */}
+        {/* Subject Progress Bars */}
         <div className="details">
-          <p className="subtitle">You're making great progress!</p>
+          <p className="subtitle">📘 Progress by Subject</p>
           <div className="bars">
-            <div className="bar-item">
-              <span>Math</span>
-              <div className="bar">
-                <div className="fill blue" style={{ width: "40%" }}></div>
+            {subjects.map((subj, index) => (
+              <div key={index} className="bar-item">
+                <span>{subj.name}</span>
+                <div className="bar">
+                  <div
+                    className={`fill ${subj.color}`}
+                    style={{
+                      width: `${subjectProgress[subj.name] || 0}%`,
+                    }}
+                  ></div>
+                </div>
+                <span className="percent-text">
+                  {subjectProgress[subj.name] || 0}%
+                </span>
               </div>
-              <span className="percent-text">40%</span>
-            </div>
-            <div className="bar-item">
-              <span>Physics</span>
-              <div className="bar">
-                <div className="fill green" style={{ width: "60%" }}></div>
-              </div>
-              <span className="percent-text">60%</span>
-            </div>
-            <div className="bar-item">
-              <span>Computer</span>
-              <div className="bar">
-                <div className="fill purple" style={{ width: "30%" }}></div>
-              </div>
-              <span className="percent-text">30%</span>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <p className="footer-text">Keep going — you're doing amazing! 💪</p>
+      <p className="footer-text">
+        Keep going — every tick brings you closer! 💪
+      </p>
 
-      {/* Component-specific CSS */}
+      {/* ======= INLINE STYLING ======= */}
       <style>{`
         .syllabus-card {
           background: white;
@@ -89,6 +122,7 @@ export default function SyllabusProgress() {
           border: 1px solid rgba(0,0,0,0.05);
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           text-align: center;
+          margin-bottom: 2.5rem;
         }
         .syllabus-card:hover {
           transform: translateY(-4px);
@@ -137,8 +171,6 @@ export default function SyllabusProgress() {
           fill: none;
           stroke-width: 8;
           stroke-linecap: round;
-          stroke: url(#gradient);
-          stroke: linear-gradient(90deg, #007aff, #5ac8fa);
           stroke: #007aff;
           transition: stroke-dashoffset 0.6s ease;
           animation: pulseGlow 2s infinite alternate;
@@ -184,7 +216,7 @@ export default function SyllabusProgress() {
         .bars {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: 0.6rem;
         }
         .bar-item {
           display: flex;
@@ -192,7 +224,7 @@ export default function SyllabusProgress() {
           gap: 0.4rem;
         }
         .bar-item span:first-child {
-          width: 70px;
+          width: 90px;
           font-size: 0.85rem;
           color: #1e293b;
           font-weight: 500;
@@ -212,12 +244,17 @@ export default function SyllabusProgress() {
         }
         .fill.blue { background: linear-gradient(90deg,#007aff,#5ac8fa); }
         .fill.green { background: linear-gradient(90deg,#34c759,#5ac8fa); }
-        .fill.purple { background: linear-gradient(90deg,#7c3aed,#a78bfa); }
+        .fill.yellow { background: linear-gradient(90deg,#ffcc00,#ffd633); }
+        .fill.red { background: linear-gradient(90deg,#ff3b30,#ff5e57); }
+        .fill.indigo { background: linear-gradient(90deg,#5856d6,#8e8eff); }
+        .fill.orange { background: linear-gradient(90deg,#ff9500,#ffb84d); }
+        .fill.cyan { background: linear-gradient(90deg,#00c7be,#34c759); }
+
         .percent-text {
           font-size: 0.8rem;
           font-weight: 600;
           color: #334155;
-          width: 35px;
+          width: 40px;
           text-align: right;
         }
 
