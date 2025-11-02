@@ -38,7 +38,6 @@ export default function App() {
       </div>
 
       <FloatingActionButton />
-      <ServiceWorkerRegistration />
       <InstallAppButton />
       <UpdatePrompt />
       {/* Smooth theme transition */}
