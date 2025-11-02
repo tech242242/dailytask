@@ -2,198 +2,150 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
-/* =====================
-   GLOBAL STYLING
-===================== */
+/* ===== GLOBAL ===== */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f2f4f8; /* soft white-gray iOS background */
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #f2f2f7;
   color: #1c1c1e;
-  min-height: 100vh;
-  overflow-x: hidden;
-  margin: 0;
-  padding: 0;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* =====================
-   HEADER STYLE
-===================== */
-header {
-  text-align: center;
-  margin-bottom: 2.5rem;
-}
-
-h1 {
-  font-size: 3rem;
-  font-weight: 700;
-  background: linear-gradient(90deg, #007aff, #34c759);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.02em;
-}
-
-p {
-  color: rgba(28, 28, 30, 0.8);
-}
-
-/* =====================
-   IOS CARD (Main Container)
-===================== */
+/* ===== CARD ===== */
 .ios-card {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 20px;
-  backdrop-filter: blur(15px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
+  background-color: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
+  transition: all 0.3s ease;
 }
 
 .ios-card:hover {
-  background: rgba(255, 255, 255, 1);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
 }
 
-/* =====================
-   CURRENT TASK SECTION
-===================== */
-.current-task {
-  background: linear-gradient(135deg, #e8f1ff 0%, #f4fbff 100%);
-  border-left: 6px solid #007aff;
-  border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(0, 122, 255, 0.15);
-  padding: 1.5rem;
-  color: #1c1c1e;
-  margin-bottom: 1rem;
-}
-
-.current-task h2 {
-  color: #007aff;
-}
-
-.current-task p {
-  color: rgba(28, 28, 30, 0.8);
-}
-
-/* =====================
-   PROGRESS BAR
-===================== */
-.progress-bar {
-  background-color: rgba(0, 0, 0, 0.08);
-  border-radius: 9999px;
-  height: 8px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.progress-bar-inner {
-  height: 100%;
-  background: linear-gradient(90deg, #007aff, #5ac8fa);
-  border-radius: 9999px;
-  transition: width 0.4s ease;
-}
-
-/* =====================
-   ICON STYLE
-===================== */
-.task-icon {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* ===== CURRENT REMINDER ===== */
+.current-reminder {
   background: linear-gradient(135deg, #007aff, #5ac8fa);
   color: white;
-  font-size: 22px;
-  box-shadow: 0 8px 20px rgba(0, 122, 255, 0.25);
-  flex-shrink: 0;
+  border-radius: 22px;
+  box-shadow: 0 12px 35px rgba(0, 122, 255, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-/* =====================
-   TIME BADGE
-===================== */
-.time-badge {
-  background: rgba(0, 122, 255, 0.1);
-  color: #007aff;
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 12px;
+.current-reminder::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.2;
+  z-index: 0;
+}
+
+.current-reminder > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== TIMELINE ===== */
+.timeline-container {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.timeline-bar {
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  top: 0;
+  left: 0;
+  background: linear-gradient(90deg, #34c759, #5ac8fa, #007aff);
+  opacity: 0.25;
+}
+
+.timeline-current {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #34c759, #007aff);
+  box-shadow: 0 0 10px rgba(0, 122, 255, 0.7);
+  transition: left 1s linear;
+}
+
+.timeline-label {
+  position: absolute;
+  top: 12px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
 }
 
-/* =====================
-   FLOATING ACTION BUTTON
-===================== */
-.fab {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 60px;
-  height: 60px;
+/* ===== NOTIFICATION ===== */
+.notification-button {
+  background-color: white;
+  color: #007aff;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.notification-button:active {
+  transform: scale(0.96);
+}
+
+/* ===== STATUS INDICATOR ===== */
+.status-indicator {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  border: none;
-  background: linear-gradient(135deg, #007aff, #5ac8fa);
-  color: #fff;
-  font-size: 1.8rem;
-  box-shadow: 0 8px 25px rgba(0, 122, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 100;
+  background: #34c759;
+  box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.25);
+  animation: pulse 2s infinite;
 }
 
-.fab:hover {
-  transform: scale(1.08);
-  box-shadow: 0 12px 35px rgba(0, 122, 255, 0.4);
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(52, 199, 89, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(52, 199, 89, 0);
+  }
 }
 
-/* =====================
-   FADE-IN ANIMATION
-===================== */
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 0.8s ease forwards;
+/* ===== ANIMATIONS ===== */
+.bounce-in {
+  animation: bounceIn 0.6s ease forwards;
 }
 
-@keyframes fadeIn {
-  from {
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
     opacity: 0;
-    transform: translateY(15px);
   }
-  to {
+  50% {
+    transform: scale(1.05);
     opacity: 1;
-    transform: translateY(0);
   }
-}
-
-/* =====================
-   HEADER GRADIENT TITLE
-===================== */
-.header-gradient {
-  background: linear-gradient(90deg, #007aff, #5ac8fa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* =====================
-   EXTRA POLISH
-===================== */
-.glow {
-  animation: glowPulse 2s infinite alternate;
-}
-
-@keyframes glowPulse {
-  from {
-    box-shadow: 0 0 6px rgba(0, 122, 255, 0.5);
-  }
-  to {
-    box-shadow: 0 0 16px rgba(0, 122, 255, 0.8);
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
