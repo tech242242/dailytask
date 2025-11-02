@@ -1,28 +1,25 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import AddTask from "./pages/AddTask";
-import Reports from "./pages/Reports";
-import ScheduleTracker from "./pages/ScheduleTracker";
+import React from "react";
+import Header from "./components/Header";
+import CurrentReminder from "./components/CurrentReminder";
+import SyllabusProgress from "./components/SyllabusProgress";
+import ScheduleList from "./components/ScheduleList";
+import SubjectProgress from "./components/SubjectProgress";
+import PerformanceSummary from "./components/PerformanceSummary";
+import FloatingActionButton from "./components/FloatingActionButton";
+import "./index.css";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-ios-bg">
-        <Navbar />
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/add-task" element={<AddTask />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/schedule" element={<ScheduleTracker />} />
-          </Routes>
-        </main>
-        <Footer />
+    <div className="min-h-screen bg-[var(--ios-bg)] text-gray-900 font-inter">
+      <div className="container mx-auto max-w-2xl px-5 py-8">
+        <Header />
+        <CurrentReminder />
+        <SyllabusProgress />
+        <ScheduleList />
+        <SubjectProgress />
+        <PerformanceSummary />
       </div>
-    </BrowserRouter>
+      <FloatingActionButton />
+    </div>
   );
 }
