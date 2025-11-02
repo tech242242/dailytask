@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./components/Header";
 import DashboardOverview from "./components/DashboardOverview";
+import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
 import CurrentReminder from "./components/CurrentReminder";
 import SyllabusProgress from "./components/SyllabusProgress";
 import ScheduleList from "./components/ScheduleList";
@@ -35,7 +36,7 @@ export default function App() {
       </div>
 
       <FloatingActionButton />
-
+      <ServiceWorkerRegistration />
       {/* Smooth theme transition */}
       <style>{`
         :root {
