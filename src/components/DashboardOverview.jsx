@@ -1,0 +1,140 @@
+import React, { useEffect, useState } from "react";
+
+export default function DashboardOverview() {
+  const [time, setTime] = useState(new Date());
+  const [nextTask, setNextTask] = useState("Math Revision");
+  const [progress, setProgress] = useState(68);
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="dashboard-card fade-in">
+      <div className="dashboard-header">
+        <h2>📊 Daily Dashboard</h2>
+        <p>
+          {time.toLocaleDateString(undefined, {
+            weekday: "long",
+            month: "short",
+            day: "numeric",
+          })}
+        </p>
+      </div>
+
+      <div className="dashboard-content">
+        <div className="dashboard-item">
+          <span className="label">Active Task</span>
+          <span className="value">{nextTask}</span>
+        </div>
+
+        <div className="dashboard-item">
+          <span className="label">Overall Progress</span>
+          <div className="progress-container">
+            <div className="progress-track">
+              <div
+                className="progress-fill"
+                style={{ width: `${progress}%` }}
+              ></div>
+            </div>
+            <span className="progress-text">{progress}%</span>
+          </div>
+        </div>
+
+        <div className="dashboard-item">
+          <span className="label">Next Task Starts In</span>
+          <span className="value glow-text">1 hr 25 min</span>
+        </div>
+      </div>
+
+      {/* ====== COMPONENT-SPECIFIC STYLES ====== */}
+      <style>{`
+        .dashboard-card {
+          background: rgba(255, 255, 255, 0.15);
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(20px);
+          padding: 1.5rem;
+          box-shadow: 0 8px 25px rgba(0, 122, 255, 0.25);
+          color: #fff;
+          margin-bottom: 1.5rem;
+          transition: all 0.3s ease;
+        }
+        .dashboard-card:hover {
+          background: rgba(255, 255, 255, 0.25);
+          transform: translateY(-3px);
+          box-shadow: 0 10px 30px rgba(0, 122, 255, 0.4);
+        }
+        .dashboard-header {
+          text-align: center;
+          margin-bottom: 1rem;
+        }
+        .dashboard-header h2 {
+          font-size: 1.4rem;
+          font-weight: 700;
+          background: linear-gradient(90deg, #00c6ff, #0072ff);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .dashboard-header p {
+          font-size: 0.9rem;
+          color: rgba(255,255,255,0.85);
+        }
+        .dashboard-content {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .dashboard-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.95rem;
+        }
+        .label {
+          color: rgba(255,255,255,0.75);
+          font-weight: 500;
+        }
+        .value {
+          font-weight: 600;
+          color: #fff;
+        }
+        .glow-text {
+          color: #5ac8fa;
+          text-shadow: 0 0 8px rgba(0,198,255,0.6);
+        }
+        .progress-container {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex: 1;
+        }
+        .progress-track {
+          flex: 1;
+          height: 8px;
+          background: rgba(255,255,255,0.2);
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        .progress-fill {
+          height: 8px;
+          border-radius: 10px;
+          background: linear-gradient(90deg,#00c6ff,#0072ff);
+          transition: width 0.4s ease;
+        }
+        .progress-text {
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+        .fade-in {
+          animation: fadeIn 0.6s ease forwards;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </div>
+  );
+}
