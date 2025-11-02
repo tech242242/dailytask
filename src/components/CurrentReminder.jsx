@@ -5,7 +5,7 @@ export default function CurrentReminder() {
   const [currentTask, setCurrentTask] = useState(null);
   const [progress, setProgress] = useState(0);
 
-  // Schedule data
+  // Schedule
   const schedule = [
     { time: "5:00 AM – 6:30 AM", activity: "Math Practice" },
     { time: "6:30 AM – 8:00 AM", activity: "Free / Morning Routine" },
@@ -27,7 +27,6 @@ export default function CurrentReminder() {
     return hours * 60 + (m || 0);
   }
 
-  // Process schedule into minute ranges
   const processed = schedule.map((item) => {
     const [start, end] = item.time.split("–").map((t) => t.trim());
     return {
@@ -37,13 +36,13 @@ export default function CurrentReminder() {
     };
   });
 
-  // Update current time + task
+  // Track current time and progress
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
       setTime(now);
-
       const minutes = now.getHours() * 60 + now.getMinutes();
+
       let found = null;
       for (const s of processed) {
         if (
@@ -70,7 +69,6 @@ export default function CurrentReminder() {
       }
       setCurrentTask(found);
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
@@ -124,79 +122,74 @@ export default function CurrentReminder() {
         <p className="notif-status">Notifications On</p>
       </div>
 
-      {/* Component-specific CSS */}
+      {/* CSS (compact version) */}
       <style>{`
         .reminder-card {
           background: linear-gradient(135deg, #007aff, #5ac8fa);
           color: #fff;
-          border-radius: 22px;
-          padding: 1.5rem;
-          box-shadow: 0 12px 35px rgba(0,122,255,0.3);
+          border-radius: 18px;
+          padding: 1rem 1.2rem;
+          box-shadow: 0 10px 25px rgba(0,122,255,0.25);
           overflow: hidden;
-          position: relative;
         }
         .reminder-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 1rem;
+          margin-bottom: 0.6rem;
         }
         .time-text {
           opacity: 0.9;
-          font-size: 0.9rem;
+          font-size: 0.8rem;
         }
         .title {
-          font-size: 1.4rem;
+          font-size: 1.2rem;
           font-weight: 700;
           margin: 0.2rem 0;
         }
         .activity-name {
           font-weight: 500;
           opacity: 0.95;
+          font-size: 0.95rem;
         }
         .live-status {
           display: flex;
           align-items: center;
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           font-weight: 600;
         }
         .status-dot {
-          width: 10px;
-          height: 10px;
+          width: 9px;
+          height: 9px;
           background: #34c759;
           border-radius: 50%;
-          margin-right: 6px;
-          box-shadow: 0 0 0 6px rgba(52,199,89,0.25);
+          margin-right: 5px;
+          box-shadow: 0 0 0 5px rgba(52,199,89,0.25);
           animation: pulse 2s infinite;
         }
 
         /* Timeline */
         .timeline {
           width: 100%;
-          height: 10px;
-          border-radius: 10px;
+          height: 8px;
+          border-radius: 8px;
           background: rgba(255,255,255,0.3);
           overflow: hidden;
+          margin: 0.8rem 0;
           position: relative;
-          margin: 1rem 0;
-        }
-        .timeline-track {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          background: rgba(255,255,255,0.15);
         }
         .timeline-progress {
           height: 100%;
           background: linear-gradient(90deg, #34c759, #5ac8fa, #007aff);
-          box-shadow: 0 0 10px rgba(52,199,89,0.5);
           transition: width 0.5s linear;
+          box-shadow: 0 0 8px rgba(52,199,89,0.5);
         }
+
         .time-left {
-          font-size: 0.9rem;
-          font-weight: 600;
+          font-size: 0.8rem;
+          font-weight: 500;
           opacity: 0.9;
-          margin-bottom: 1rem;
+          margin-bottom: 0.8rem;
         }
 
         /* Notifications */
@@ -208,33 +201,32 @@ export default function CurrentReminder() {
         .notif-btn {
           background: white;
           color: #007aff;
-          border-radius: 12px;
-          padding: 10px 20px;
+          border-radius: 10px;
+          padding: 8px 16px;
+          font-size: 0.8rem;
           font-weight: 600;
           display: flex;
           align-items: center;
-          box-shadow: 0 4px 15px rgba(0,122,255,0.25);
-          transition: all 0.3s ease;
+          box-shadow: 0 3px 10px rgba(0,122,255,0.25);
+          transition: all 0.2s ease;
         }
         .notif-btn:active {
           transform: scale(0.96);
         }
         .notif-status {
-          font-size: 0.8rem;
+          font-size: 0.75rem;
           opacity: 0.9;
         }
 
         /* Animation */
         @keyframes pulse {
           0% { box-shadow: 0 0 0 0 rgba(52,199,89,0.4); }
-          70% { box-shadow: 0 0 0 12px rgba(52,199,89,0); }
+          70% { box-shadow: 0 0 0 10px rgba(52,199,89,0); }
           100% { box-shadow: 0 0 0 0 rgba(52,199,89,0); }
         }
-
         .bounce-in {
-          animation: bounceIn 0.6s ease forwards;
+          animation: bounceIn 0.5s ease forwards;
         }
-
         @keyframes bounceIn {
           0% { transform: scale(0.3); opacity: 0; }
           50% { transform: scale(1.05); opacity: 1; }
