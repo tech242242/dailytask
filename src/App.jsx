@@ -1,5 +1,6 @@
 import React from "react";
 import Header from "./components/Header";
+import DailyGoalTracker from "./components/DailyGoalTracker";
 import DashboardOverview from "./components/DashboardOverview";
 import CurrentReminder from "./components/CurrentReminder";
 import SyllabusProgress from "./components/SyllabusProgress";
@@ -20,6 +21,7 @@ export default function App() {
           <CurrentReminder />
           <DashboardOverview />
           <SyllabusProgress />
+         <DailyGoalTracker />
           <ScheduleList />
           <SubjectProgress />
           <PerformanceSummary />
