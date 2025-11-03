@@ -7,6 +7,7 @@ export default function Header() {
     return localStorage.getItem("theme") || "light";
   });
 
+  // Apply theme style to body
   useEffect(() => {
     const root = document.body;
     if (theme === "dark") {
@@ -24,14 +25,18 @@ export default function Header() {
   };
 
   return (
-    <header className="relative text-center mb-10 transition-all duration-500">
-      <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+    <header className="relative text-center mb-14 transition-all duration-500">
+      {/* Main Title */}
+      <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
         Daily Schedule
       </h1>
 
-      {/* ✅ New Motivation Line */}
-      <MotivationQuote />
+      {/* Motivational Line (Better spacing) */}
+      <div className="mt-4">
+        <MotivationQuote />
+      </div>
 
+      {/* Theme Toggle Button */}
       <button
         onClick={toggleTheme}
         className="absolute right-5 top-2 p-2 rounded-full border border-white/20 backdrop-blur-md transition-all hover:scale-105 shadow-md"
