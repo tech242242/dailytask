@@ -44,7 +44,7 @@ export default function DashboardOverview() {
           const h = Math.floor(remainingMs / (1000 * 60 * 60));
           const m = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
           taskTimeLeft = `${h} hr ${m} min`;
-          // next task countdown
+
           if (i + 1 < schedule.length) {
             const [nextStart] = parseTimeRange(schedule[i + 1].time);
             const diff = nextStart - now;
@@ -106,13 +106,13 @@ export default function DashboardOverview() {
           <span className="value glow-text">{nextTaskTime}</span>
         </div>
 
-        <div className="dashboard-item">
+        <div className="dashboard-item progress-wrapper">
           <span className="label">Day Progress</span>
           <div className="progress-container">
             <div className="progress-track">
               <div className="progress-fill" style={{ width: `${progress}%` }}></div>
             </div>
-            <span className="progress-text">{Math.floor(progress)}%</span>
+            <span className="progress-text desktop-only">{Math.floor(progress)}%</span>
           </div>
         </div>
       </div>
@@ -146,8 +146,18 @@ export default function DashboardOverview() {
         .progress-track { flex:1; height:8px; background:rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; }
         .progress-fill { height:8px; border-radius:10px; background: linear-gradient(90deg,#00c6ff,#0072ff); transition: width 0.4s ease; }
         .progress-text { font-size:0.85rem; font-weight:600; color:#000; }
+        .desktop-only { display:none; }
+        @media(min-width:1024px) { .desktop-only { display:inline-block; } }
         .fade-in { animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+        /* Mobile responsive */
+        @media(max-width:640px) {
+          .dashboard-card { padding: 1rem; }
+          .dashboard-header h2 { font-size:1.2rem; }
+          .dashboard-header p { font-size:0.8rem; }
+          .dashboard-item { font-size:0.85rem; }
+        }
       `}</style>
     </div>
   );
