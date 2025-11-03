@@ -1,40 +1,41 @@
 import React, { useEffect, useState } from "react";
 
 export default function PerformanceSummary() {
-  // Metrics with example percentages
   const metrics = [
-    { name: "Mindset", percent: 90 },
-    { name: "Strategy", percent: 82 },
-    { name: "Mental Health", percent: 88 },
-    { name: "Hard Work", percent: 95 },
-    { name: "Focus", percent: 85 },
-    { name: "Discipline", percent: 92 },
-    { name: "Consistency", percent: 87 },
+    { name: "Mindset", percent: 90, note: "🧠 Stay positive!" },
+    { name: "Strategy", percent: 82, note: "📊 Plan wisely" },
+    { name: "Mental Health", percent: 88, note: "🧘‍♂️ Keep calm" },
+    { name: "Hard Work", percent: 95, note: "💪 No shortcuts" },
+    { name: "Focus", percent: 85, note: "🎯 Concentrate" },
+    { name: "Discipline", percent: 92, note: "⏱ Stick to routine" },
+    { name: "Consistency", percent: 87, note: "🔥 Daily habits" },
   ];
 
-  // Animated fill state
   const [fillPercents, setFillPercents] = useState(metrics.map(() => 0));
 
   useEffect(() => {
     const timeout = setTimeout(() => {
       setFillPercents(metrics.map((m) => m.percent));
-    }, 200); // slight delay to animate on mount
+    }, 200);
     return () => clearTimeout(timeout);
   }, []);
 
   return (
     <div className="ios-card fade-in p-5 mt-10">
-      <h2 className="text-2xl font-bold text-gray-800 mb-5 flex items-center">
-        <i data-lucide="award" className="w-6 h-6 mr-3 text-yellow-500"></i>
-        Performance Summary
-      </h2>
+      {/* Motivational Header */}
+      <div className="header mb-5">
+        <h2 className="text-2xl font-bold text-blue-700 flex items-center">
+          <span className="mr-3">🏆</span> Performance Summary
+        </h2>
+        <p className="text-blue-500 font-medium mt-1">🚀 Push your limits, stay unstoppable!</p>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {metrics.map((metric, i) => (
           <div key={i} className="stat-item">
-            <div className="flex justify-between mb-2">
-              <span className="font-medium text-sm">{metric.name}</span>
-              <span className="text-sm font-bold">{fillPercents[i]}%</span>
+            <div className="flex justify-between mb-1">
+              <span className="font-medium text-sm text-black">{metric.name}</span>
+              <span className="text-sm font-bold text-blue-700">{fillPercents[i]}%</span>
             </div>
             <div className="progress-bar">
               <div
@@ -42,6 +43,7 @@ export default function PerformanceSummary() {
                 style={{ width: `${fillPercents[i]}%` }}
               ></div>
             </div>
+            <p className="mt-1 text-xs text-blue-600 font-medium">{metric.note}</p>
           </div>
         ))}
       </div>
@@ -83,10 +85,11 @@ export default function PerformanceSummary() {
 
         .progress-bar {
           width: 100%;
-          height: 10px;
+          height: 12px;
           background: rgba(0,0,0,0.05);
           border-radius: 8px;
           overflow: hidden;
+          margin-bottom: 0.3rem;
         }
         .progress-bar-inner {
           height: 100%;
@@ -95,10 +98,11 @@ export default function PerformanceSummary() {
           transition: width 1.2s ease-in-out;
         }
 
+        /* Responsive */
         @media(max-width:640px) {
           .ios-card { padding: 1rem; }
           .stat-item { padding: 0.7rem 0.9rem; }
-          .progress-bar { height: 8px; }
+          .progress-bar { height: 10px; }
         }
       `}</style>
     </div>
