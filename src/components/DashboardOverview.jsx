@@ -106,14 +106,12 @@ export default function DashboardOverview() {
           <span className="value glow-text">{nextTaskTime}</span>
         </div>
 
-        <div className="dashboard-item progress-wrapper">
-          <span className="label">Day Progress</span>
-          <div className="progress-container">
-            <div className="progress-track">
-              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
-            </div>
-            <span className="progress-text desktop-only">{Math.floor(progress)}%</span>
+        {/* Full-width progress bar with percentage below */}
+        <div className="progress-wrapper">
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${progress}%` }}></div>
           </div>
+          <div className="progress-text">{Math.floor(progress)}%</div>
         </div>
       </div>
 
@@ -142,12 +140,13 @@ export default function DashboardOverview() {
         .label { color:rgba(0,0,0,0.7); font-weight:500; }
         .value { font-weight:600; color:#000; }
         .glow-text { color:#0072ff; text-shadow:0 0 6px rgba(0,114,255,0.3); }
-        .progress-container { display:flex; align-items:center; gap:0.5rem; flex:1; }
-        .progress-track { flex:1; height:8px; background:rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; }
-        .progress-fill { height:8px; border-radius:10px; background: linear-gradient(90deg,#00c6ff,#0072ff); transition: width 0.4s ease; }
-        .progress-text { font-size:0.85rem; font-weight:600; color:#000; }
-        .desktop-only { display:none; }
-        @media(min-width:1024px) { .desktop-only { display:inline-block; } }
+
+        /* Full-width progress bar */
+        .progress-wrapper { display:flex; flex-direction:column; gap:0.3rem; margin-top:1rem; }
+        .progress-track { width:100%; height:12px; background:rgba(0,0,0,0.1); border-radius:10px; overflow:hidden; }
+        .progress-fill { height:12px; border-radius:10px; background: linear-gradient(90deg,#00c6ff,#0072ff); transition: width 0.4s ease; }
+        .progress-text { text-align:center; font-weight:600; color:#000; font-size:0.9rem; }
+
         .fade-in { animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
@@ -157,6 +156,8 @@ export default function DashboardOverview() {
           .dashboard-header h2 { font-size:1.2rem; }
           .dashboard-header p { font-size:0.8rem; }
           .dashboard-item { font-size:0.85rem; }
+          .progress-track { height:10px; }
+          .progress-text { font-size:0.8rem; }
         }
       `}</style>
     </div>
