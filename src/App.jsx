@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./components/Header";
 import DashboardOverview from "./components/DashboardOverview";
+import ChatBot from "./components/ChatBot";
 import UpdatePrompt from "./components/UpdatePrompt";
 import MotivationBooster from "./components/MotivationBooster";
 import ReminderNotification from "./components/ReminderNotification";
@@ -28,6 +29,7 @@ export default function App() {
 
         <div className="space-y-8">
           <CurrentReminder />
+          <ChatBot />
           <DashboardOverview />
           <MotivationBooster />
 
