@@ -3,7 +3,6 @@ import Header from "./components/Header";
 import DashboardOverview from "./components/DashboardOverview";
 import UpdatePrompt from "./components/UpdatePrompt";
 import MotivationBooster from "./components/MotivationBooster";
-import MotivationBooster from "./components/MotivationBooster";
 import ReminderNotification from "./components/ReminderNotification";
 import InstallAppButton from "./components/InstallAppButton";
 import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
