@@ -4,7 +4,7 @@ import schedule from "../data/schedule";
 export default function DashboardOverview() {
   const [time, setTime] = useState(new Date());
   const [currentTask, setCurrentTask] = useState({});
-  const [nextTaskTime, setNextTaskTime] = useState("");
+  const [nextTask, setNextTask] = useState({ name: "", countdown: "" });
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState("");
 
@@ -27,7 +27,7 @@ export default function DashboardOverview() {
       setTime(now);
 
       let active = schedule[0];
-      let nextCountdown = "";
+      let nextTaskInfo = { name: "", countdown: "" };
       let taskTimeLeft = "";
 
       const dayStart = parseTimeRange(schedule[0].time)[0];
@@ -50,22 +50,30 @@ export default function DashboardOverview() {
             const diff = nextStart - now;
             const nh = Math.floor(diff / (1000 * 60 * 60));
             const nm = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            nextCountdown = `${nh} hr ${nm} min`;
-          } else nextCountdown = "End of Day";
+            nextTaskInfo = {
+              name: schedule[i + 1].area,
+              countdown: `${nh} hr ${nm} min`,
+            };
+          } else {
+            nextTaskInfo = { name: "End of Day", countdown: "" };
+          }
           break;
         } else if (now < start) {
           active = schedule[i - 1] || schedule[0];
           const diff = start - now;
           const h = Math.floor(diff / (1000 * 60 * 60));
           const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          nextCountdown = `${h} hr ${m} min`;
+          nextTaskInfo = {
+            name: schedule[i].area,
+            countdown: `${h} hr ${m} min`,
+          };
           taskTimeLeft = "Not started";
           break;
         }
       }
 
       setCurrentTask(active);
-      setNextTaskTime(nextCountdown);
+      setNextTask(nextTaskInfo);
       setTimeLeft(taskTimeLeft);
     }, 1000);
 
@@ -102,8 +110,10 @@ export default function DashboardOverview() {
         </div>
 
         <div className="dashboard-item">
-          <span className="label">Next Task Starts In</span>
-          <span className="value glow-text">{nextTaskTime}</span>
+          <span className="label">Next Task</span>
+          <span className="value glow-text">
+            {nextTask.name} – {nextTask.countdown}
+          </span>
         </div>
 
         {/* Full-width progress bar with percentage below */}
@@ -150,7 +160,6 @@ export default function DashboardOverview() {
         .fade-in { animation: fadeIn 0.6s ease forwards; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-        /* Mobile responsive */
         @media(max-width:640px) {
           .dashboard-card { padding: 1rem; }
           .dashboard-header h2 { font-size:1.2rem; }
