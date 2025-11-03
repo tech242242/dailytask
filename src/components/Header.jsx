@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
+import MotivationQuote from "./MotivationQuote";
 
 export default function Header() {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("theme") || "light";
   });
 
-  // Apply theme colors directly via body style
   useEffect(() => {
     const root = document.body;
     if (theme === "dark") {
@@ -25,23 +25,21 @@ export default function Header() {
 
   return (
     <header className="relative text-center mb-10 transition-all duration-500">
-      <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+      <h1 className="text-5xl font-bold mb-2 bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
         Daily Schedule
       </h1>
-      <p
-        className={`text-xl transition-colors duration-300 ${
-          theme === "dark" ? "text-pink-300" : "text-pink-600"
-        }`}
-      >
-        Stay productive and organized
-      </p>
 
-      {/* Theme Toggle Button */}
+      {/* ✅ New Motivation Line */}
+      <MotivationQuote />
+
       <button
         onClick={toggleTheme}
         className="absolute right-5 top-2 p-2 rounded-full border border-white/20 backdrop-blur-md transition-all hover:scale-105 shadow-md"
         style={{
-          background: theme === "dark" ? "rgba(0,0,0,0.3)" : "rgba(255,255,255,0.2)",
+          background:
+            theme === "dark"
+              ? "rgba(0,0,0,0.3)"
+              : "rgba(255,255,255,0.2)",
         }}
         title="Toggle Dark / Light Mode"
       >
@@ -51,17 +49,6 @@ export default function Header() {
           <Sun className="text-yellow-400" size={22} />
         )}
       </button>
-
-      {/* Internal CSS for subtle effects */}
-      <style>{`
-        header {
-          transition: background 0.4s ease, color 0.4s ease;
-        }
-        header:hover h1 {
-          letter-spacing: 0.5px;
-          text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
-      `}</style>
     </header>
   );
 }
