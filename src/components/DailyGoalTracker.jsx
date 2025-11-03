@@ -8,26 +8,25 @@ export default function DailyGoalTracker() {
   const [lastDate, setLastDate] = useState(() => localStorage.getItem("lastCompletionDate") || "");
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const current = localStorage.getItem("theme") || "light";
-      setTheme(current);
-    });
-    observer.observe(document.documentElement, { attributes: true });
-    return () => observer.disconnect();
-  }, []);
+// ✅ Replace theme change listener
+useEffect(() => {
+  const updateTheme = () => {
+    const current = localStorage.getItem("theme") || "light";
+    setTheme(current);
+  };
 
-  useEffect(() => {
-    const today = new Date().toDateString();
-    if (lastDate && lastDate !== today && completed >= goal) {
-      setStreak((prev) => prev + 1);
-      setCompleted(0);
-    } else if (lastDate && lastDate !== today) {
-      setStreak(0);
-      setCompleted(0);
-    }
-    setLastDate(today);
-  }, []);
+  // Listen to *storage* changes
+  window.addEventListener("storage", updateTheme);
+
+  // Listen to theme toggle via button clicks too
+  const interval = setInterval(updateTheme, 300);
+
+  return () => {
+    window.removeEventListener("storage", updateTheme);
+    clearInterval(interval);
+  };
+}, []);
+
 
   useEffect(() => {
     localStorage.setItem("dailyGoal", goal);
