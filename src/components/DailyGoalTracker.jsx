@@ -8,7 +8,6 @@ export default function DailyGoalTracker() {
   const [lastDate, setLastDate] = useState(() => localStorage.getItem("lastCompletionDate") || "");
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
-  // Listen to theme changes (if toggled in Header)
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const current = localStorage.getItem("theme") || "light";
@@ -18,7 +17,6 @@ export default function DailyGoalTracker() {
     return () => observer.disconnect();
   }, []);
 
-  // Reset or update streak each day
   useEffect(() => {
     const today = new Date().toDateString();
     if (lastDate && lastDate !== today && completed >= goal) {
@@ -31,7 +29,6 @@ export default function DailyGoalTracker() {
     setLastDate(today);
   }, []);
 
-  // Save to localStorage whenever data changes
   useEffect(() => {
     localStorage.setItem("dailyGoal", goal);
     localStorage.setItem("tasksDoneToday", completed);
@@ -46,18 +43,22 @@ export default function DailyGoalTracker() {
     }
   };
 
-  // Theme-based styles
   const isDark = theme === "dark";
   const textColor = isDark ? "text-gray-100" : "text-gray-900";
   const subText = isDark ? "text-gray-400" : "text-gray-600";
+  const notifierColor = isDark ? "text-yellow-300" : "text-yellow-600"; // ✅ UPDATED COLOR
   const bgCard = isDark
     ? "bg-white/10 border-white/20"
     : "bg-white/60 border-gray-200";
 
   return (
-    <div
-      className={`p-5 rounded-2xl border backdrop-blur-lg shadow-lg glass-move relative overflow-hidden ${bgCard} ${textColor}`}
-    >
+    <div className={`p-5 rounded-2xl border backdrop-blur-lg shadow-lg glass-move relative overflow-hidden ${bgCard} ${textColor}`}>
+      
+      {/* ✅ Smart Study Notifier (Dynamic Color) */}
+      <p className={`text-xs font-medium mb-2 ${notifierColor}`}>
+        Smart Study Notifier Active ✅
+      </p>
+
       <h2 className="text-lg font-semibold flex items-center gap-2 mb-2">
         <Target className="text-cyan-400" /> Daily Goal Tracker
       </h2>
@@ -94,7 +95,6 @@ export default function DailyGoalTracker() {
         />
       </div>
 
-      {/* internal CSS for glow + animation */}
       <style>{`
         .glass-move {
           transition: all 0.3s ease;
