@@ -2,6 +2,8 @@ import React from "react";
 import Header from "./components/Header";
 import DashboardOverview from "./components/DashboardOverview";
 import UpdatePrompt from "./components/UpdatePrompt";
+import MotivationBooster from "./components/MotivationBooster";
+import MotivationBooster from "./components/MotivationBooster";
 import ReminderNotification from "./components/ReminderNotification";
 import InstallAppButton from "./components/InstallAppButton";
 import ServiceWorkerRegistration from "./components/ServiceWorkerRegistration";
@@ -28,6 +30,7 @@ export default function App() {
         <div className="space-y-8">
           <CurrentReminder />
           <DashboardOverview />
+          <MotivationBooster />
 
           {/* --- Daily Tracker + Notifier side by side on large screens --- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
