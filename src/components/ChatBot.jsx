@@ -1,59 +1,190 @@
 import React, { useState } from "react";
+import { Send, MessageCircle } from "lucide-react";
 
 export default function ChatBot() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [open, setOpen] = useState(false);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage = { sender: "user", text: input };
-    setMessages((prev) => [...prev, userMessage]);
+    // Show user msg
+    setMessages((prev) => [...prev, { sender: "user", text: input }]);
 
-    const response = await fetch(
-      `https://www.dark-yasiya-api.site/ai/letmegpt?q=${encodeURIComponent(input)}`
-    );
-    const data = await response.text();
+    try {
+      const res = await fetch(
+        `https://www.dark-yasiya-api.site/ai/letmegpt?q=${encodeURIComponent(
+          input
+        )}`
+      );
+      const data = await res.json();
 
-    const botMessage = { sender: "bot", text: data };
-    setMessages((prev) => [...prev, botMessage]);
+      const reply = data.result || "⚠️ No response";
+      setMessages((prev) => [...prev, { sender: "bot", text: reply }]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "API Error ❌ Try again" }
+      ]);
+    }
 
     setInput("");
   };
 
   return (
-    <div className="fixed bottom-4 right-4 bg-white/70 backdrop-blur-xl shadow-lg p-4 rounded-2xl border border-gray-300 w-80">
-      <h3 className="font-bold text-gray-800 mb-2">💬 AI Chat Assistant</h3>
-
-      <div className="h-48 overflow-y-auto px-2 mb-3 bg-white rounded-lg p-2 shadow-inner">
-        {messages.map((msg, index) => (
-          <p
-            key={index}
-            className={`text-sm my-1 ${
-              msg.sender === "user"
-                ? "text-blue-600 text-right"
-                : "text-green-600 text-left"
-            }`}
-          >
-            {msg.text}
-          </p>
-        ))}
-      </div>
-
-      <div className="flex gap-2">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask something..."
-          className="flex-1 border px-2 py-1 rounded-lg outline-none bg-white/80"
-        />
+    <div className="chatbot-container">
+      {/* Floating Button */}
+      {!open && (
         <button
-          onClick={sendMessage}
-          className="bg-cyan-500 hover:bg-cyan-600 text-white px-3 py-1 rounded-md"
+          className="chat-button"
+          onClick={() => setOpen(true)}
         >
-          Send
+          <MessageCircle size={26} />
         </button>
-      </div>
+      )}
+
+      {/* Chat Window */}
+      {open && (
+        <div className="chat-box glassmorphism">
+          <div className="chat-header">
+            <span>🤖 Study AI Assistant</span>
+            <button onClick={() => setOpen(false)}>✖</button>
+          </div>
+
+          <div className="chat-body">
+            {messages.map((msg, i) => (
+              <p
+                key={i}
+                className={`msg ${
+                  msg.sender === "user" ? "user-msg" : "bot-msg"
+                }`}
+              >
+                {msg.text}
+              </p>
+            ))}
+          </div>
+
+          <div className="chat-input">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ask something..."
+            />
+            <button onClick={sendMessage}>
+              <Send size={18} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ✅ Styling */}
+      <style>{`
+        .chat-button {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background: #06b6d4;
+          color: white;
+          border-radius: 50%;
+          width: 55px;
+          height: 55px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+          animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+
+        .chat-box {
+          position: fixed;
+          bottom: 90px;
+          right: 20px;
+          width: 320px;
+          height: 380px;
+          border-radius: 18px;
+          display: flex;
+          flex-direction: column;
+          backdrop-filter: blur(15px);
+          border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .glassmorphism {
+          background: rgba(255,255,255,0.25);
+          backdrop-filter: blur(10px);
+        }
+
+        .chat-header {
+          padding: 10px;
+          background:#0ea5e9;
+          color: white;
+          font-weight: 600;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-radius: 18px 18px 0 0;
+        }
+
+        .chat-body {
+          flex: 1;
+          padding: 10px;
+          overflow-y: auto;
+        }
+
+        .msg {
+          padding: 6px 10px;
+          margin: 6px 0;
+          border-radius: 10px;
+          font-size: 14px;
+          max-width: 80%;
+        }
+
+        .user-msg {
+          background: #06b6d4;
+          color: white;
+          margin-left: auto;
+          text-align: right;
+        }
+
+        .bot-msg {
+          background: #ffffffcc;
+          color: #111;
+          text-align: left;
+        }
+
+        .chat-input {
+          display: flex;
+          gap: 5px;
+          padding: 10px;
+        }
+
+        .chat-input input {
+          flex: 1;
+          border: 1px solid #ccc;
+          padding: 6px;
+          border-radius: 6px;
+          outline: none;
+        }
+
+        .chat-input button {
+          background: #06b6d4;
+          color: white;
+          padding: 6px 10px;
+          border-radius: 6px;
+        }
+
+        @media(max-width: 500px) {
+          .chat-box {
+            width: 90%;
+            right: 5%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
