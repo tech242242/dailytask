@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function PerformanceSummary() {
-  const stats = [
+  // Metrics with example percentages
+  const metrics = [
+    { name: "Mindset", percent: 90 },
+    { name: "Strategy", percent: 82 },
+    { name: "Mental Health", percent: 88 },
+    { name: "Hard Work", percent: 95 },
     { name: "Focus", percent: 85 },
-    { name: "Hard Work", percent: 78 },
     { name: "Discipline", percent: 92 },
-    { name: "Consistency", percent: 88 },
+    { name: "Consistency", percent: 87 },
   ];
+
+  // Animated fill state
+  const [fillPercents, setFillPercents] = useState(metrics.map(() => 0));
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setFillPercents(metrics.map((m) => m.percent));
+    }, 200); // slight delay to animate on mount
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <div className="ios-card fade-in p-5 mt-10">
@@ -16,16 +30,16 @@ export default function PerformanceSummary() {
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        {stats.map((stat, i) => (
+        {metrics.map((metric, i) => (
           <div key={i} className="stat-item">
             <div className="flex justify-between mb-2">
-              <span className="font-medium text-sm">{stat.name}</span>
-              <span className="text-sm font-bold">{stat.percent}%</span>
+              <span className="font-medium text-sm">{metric.name}</span>
+              <span className="text-sm font-bold">{fillPercents[i]}%</span>
             </div>
             <div className="progress-bar">
               <div
                 className="progress-bar-inner"
-                style={{ width: `${stat.percent}%` }}
+                style={{ width: `${fillPercents[i]}%` }}
               ></div>
             </div>
           </div>
@@ -45,6 +59,7 @@ export default function PerformanceSummary() {
           transform: translateY(-2px);
           box-shadow: 0 12px 25px rgba(0,0,0,0.15);
         }
+
         .fade-in {
           opacity: 0;
           animation: fadeIn 0.6s ease forwards;
@@ -54,27 +69,6 @@ export default function PerformanceSummary() {
           to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Stat progress bars */
-        .progress-bar {
-          width: 100%;
-          height: 10px;
-          background: rgba(0,0,0,0.05);
-          border-radius: 8px;
-          overflow: hidden;
-        }
-        .progress-bar-inner {
-          height: 100%;
-          background: linear-gradient(90deg, #00c6ff, #0072ff);
-          border-radius: 8px;
-          transition: width 1s ease-in-out;
-          animation: fillBar 1s forwards;
-        }
-        @keyframes fillBar {
-          from { width: 0; }
-          to { width: var(--width); }
-        }
-
-        /* Stat item card hover */
         .stat-item {
           background: rgba(255,255,255,0.9);
           padding: 0.8rem 1rem;
@@ -87,7 +81,20 @@ export default function PerformanceSummary() {
           box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
 
-        /* Responsive */
+        .progress-bar {
+          width: 100%;
+          height: 10px;
+          background: rgba(0,0,0,0.05);
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .progress-bar-inner {
+          height: 100%;
+          background: linear-gradient(90deg,#00c6ff,#0072ff);
+          border-radius: 8px;
+          transition: width 1.2s ease-in-out;
+        }
+
         @media(max-width:640px) {
           .ios-card { padding: 1rem; }
           .stat-item { padding: 0.7rem 0.9rem; }
